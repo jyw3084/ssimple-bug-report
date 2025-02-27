@@ -1,0 +1,11 @@
+@import '../../node_modules/rrweb-player/dist/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rr-player {
+  box-shadow: none;
+  background-color: #3f3f46;
+  margin-bottom: 1rem;
+}
