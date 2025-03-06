@@ -1,3 +1,3 @@
 # ssimple Bug Reporting Tool
 
-[Live Demo](https://ssimple-report.web.app/)
+<a href="https://ssimple-report.web.app/" target="_blank">Live Demo</a>
