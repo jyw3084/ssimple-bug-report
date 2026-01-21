@@ -20,3 +20,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		}
 	}
 }
+
+// TODO: Add authentication

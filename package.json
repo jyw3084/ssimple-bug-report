@@ -37,7 +37,9 @@
     "resend": "^1.1.0",
     "rrweb": "^2.0.0-alpha.4",
     "rrweb-player": "^1.0.0-alpha.4",
-    "uid": "^2.0.2"
+    "uid": "^2.0.2",
+    "chart.js": "^4.x",
+    "react-chartjs-2": "^5.x"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

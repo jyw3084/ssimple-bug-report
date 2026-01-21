@@ -46,97 +46,97 @@ export default function Widget() {
 	const rrwebPlayerRef = useRef(null);
 	const server: { process: ProcessServerConfigFunction, revert: RevertServerConfigFunction } = {
 		process: (fieldName, file, metadata, load, error, progress, abort) => {
-			const id = uid(20);
-			const storageRef = ref(storage, 'uploads/support_files/' + id);
-			const uploadTask = uploadBytesResumable(storageRef, file);
-			const fileType = file.type.split('/')[0];
+			// const id = uid(20);
+			// const storageRef = ref(storage, 'uploads/support_files/' + id);
+			// const uploadTask = uploadBytesResumable(storageRef, file);
+			// const fileType = file.type.split('/')[0];
 
-			uploadTask.on('state_changed',
-				snapshot => {
-					progress(true, snapshot.bytesTransferred, snapshot.totalBytes);
-				},
-				err => {
-					error(err.message);
-				},
-				() => {
-					load(id);
-					getDownloadURL(storageRef).then(url => {
-						const newUploadObj = {
-							_id: id,
-							account_id: accountId,
-							type: fileType,
-							parent_type: 'issue_report',
-							parent_id: '',
-							status: 'pending',
-							download_url: url,
-							created_at: Date.now()
-						}
-						setDoc(doc(firestore, 'uploads', id), newUploadObj).then(() => {
-							const newFiles = files;
-							newFiles.push(newUploadObj);
-							setFiles(newFiles);
-							setIsSubmitActive(true);
-						}).catch(err => error(err));
-					});
-				}
-			);
+			// uploadTask.on('state_changed',
+			// 	snapshot => {
+			// 		progress(true, snapshot.bytesTransferred, snapshot.totalBytes);
+			// 	},
+			// 	err => {
+			// 		error(err.message);
+			// 	},
+			// 	() => {
+			// 		load(id);
+			// 		getDownloadURL(storageRef).then(url => {
+			// 			const newUploadObj = {
+			// 				_id: id,
+			// 				account_id: accountId,
+			// 				type: fileType,
+			// 				parent_type: 'issue_report',
+			// 				parent_id: '',
+			// 				status: 'pending',
+			// 				download_url: url,
+			// 				created_at: Date.now()
+			// 			}
+			// 			setDoc(doc(firestore, 'uploads', id), newUploadObj).then(() => {
+			// 				const newFiles = files;
+			// 				newFiles.push(newUploadObj);
+			// 				setFiles(newFiles);
+			// 				setIsSubmitActive(true);
+			// 			}).catch(err => error(err));
+			// 		});
+			// 	}
+			// );
 
-			return {
-				abort: () => {
-					uploadTask.cancel();
-					deleteDoc(doc(firestore, 'uploads', id)).then(() => {
-						const newFiles = files;
-						newFiles.pop();
-						setFiles(newFiles);
-						abort();
-					}).catch(err => error(err));
-				}
-			}
+			// return {
+			// 	abort: () => {
+			// 		uploadTask.cancel();
+			// 		deleteDoc(doc(firestore, 'uploads', id)).then(() => {
+			// 			const newFiles = files;
+			// 			newFiles.pop();
+			// 			setFiles(newFiles);
+			// 			abort();
+			// 		}).catch(err => error(err));
+			// 	}
+			// }
 		},
 		revert: (uniqueFileId, load, error) => {
-			const currentFiles = files;
-			const newFiles = currentFiles.filter(({ _id }) => _id !== uniqueFileId);
-			setFiles(newFiles);
-			const storageRef = ref(storage, 'uploads/support_files/' + uniqueFileId);
-			deleteObject(storageRef).then(() => {
-				deleteDoc(doc(firestore, 'uploads', uniqueFileId)).then(() => {
-					load();
-				}).catch(err => error(err));
-			}).catch(err => {
-				error(err.message);
-			});
+			// const currentFiles = files;
+			// const newFiles = currentFiles.filter(({ _id }) => _id !== uniqueFileId);
+			// setFiles(newFiles);
+			// const storageRef = ref(storage, 'uploads/support_files/' + uniqueFileId);
+			// deleteObject(storageRef).then(() => {
+			// 	deleteDoc(doc(firestore, 'uploads', uniqueFileId)).then(() => {
+			// 		load();
+			// 	}).catch(err => error(err));
+			// }).catch(err => {
+			// 	error(err.message);
+			// });
 		}
 	}
 
-	const sendEmail = async (type: string, email: string, topicId: string) => {
-		if (type === 'notifyUser') {
-			const response = await fetch('api/send-email', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					email,
-					subject: "Thank you for sharing your feedback",
-					html: "<p>Link to your feedback post: <a href='https://report.ssimple.co/?topic=" + topicId + "' target='_blank'>https://report.ssimple.co/?topic=" + topicId + "</a></p>"
-				})
-			});
-			return response.json();
-		} else if (type === 'notifyAdmin') {
-			const response = await fetch('api/send-email', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					email,
-					subject: "New Issue Report Received",
-					html: "<p>You received an issue report. Please view it in your <a href='https://report.ssimple.co/admin/issues' target='_blank'>admin dashboard</a>.</p>"
-				})
-			});
-			return response.json();
-		}
-	}
+	// const sendEmail = async (type: string, email: string, topicId: string) => {
+	// 	if (type === 'notifyUser') {
+	// 		const response = await fetch('api/send-email', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify({
+	// 				email,
+	// 				subject: "Thank you for sharing your feedback",
+	// 				html: "<p>Link to your feedback post: <a href='https://report.ssimple.co/?topic=" + topicId + "' target='_blank'>https://report.ssimple.co/?topic=" + topicId + "</a></p>"
+	// 			})
+	// 		});
+	// 		return response.json();
+	// 	} else if (type === 'notifyAdmin') {
+	// 		const response = await fetch('api/send-email', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify({
+	// 				email,
+	// 				subject: "New Issue Report Received",
+	// 				html: "<p>You received an issue report. Please view it in your <a href='https://report.ssimple.co/admin/issues' target='_blank'>admin dashboard</a>.</p>"
+	// 			})
+	// 		});
+	// 		return response.json();
+	// 	}
+	// }
 
 	const getData = async (appId: string) => {
 		try {
@@ -173,56 +173,57 @@ export default function Widget() {
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		const reportId = uid(20);
-		let downloadUrl = '';
-		if (bugVisualType === 'screenshot') {
-			try {
-				const storageRef = ref(storage, 'uploads/issue_reports/' + reportId);
-				await uploadString(storageRef, bugScreenshot, 'data_url', { contentType: 'image/png' });
-				downloadUrl = await getDownloadURL(storageRef);
-			} catch (err: any) {
-				throw new Error('Error uploading screenshot: ' + err.message);
-			}
-		} else if (bugVisualType === 'recording') {
-			try {
-				const storageRef = ref(storage, 'uploads/issue_reports/' + reportId);
-				const blob = new Blob([bugVideo], { type: 'application/json' });
-				await uploadBytes(storageRef, blob);
-				downloadUrl = await getDownloadURL(storageRef);
-			} catch (err: any) {
-				throw new Error('Error uploading recording: ' + err.message);
-			}
-		}
+		// const reportId = uid(20);
+		// let downloadUrl = '';
+		// if (bugVisualType === 'screenshot') {
+		// 	try {
+		// 		const storageRef = ref(storage, 'uploads/issue_reports/' + reportId);
+		// 		await uploadString(storageRef, bugScreenshot, 'data_url', { contentType: 'image/png' });
+		// 		downloadUrl = await getDownloadURL(storageRef);
+		// 	} catch (err: any) {
+		// 		throw new Error('Error uploading screenshot: ' + err.message);
+		// 	}
+		// } else if (bugVisualType === 'recording') {
+		// 	try {
+		// 		const storageRef = ref(storage, 'uploads/issue_reports/' + reportId);
+		// 		const blob = new Blob([bugVideo], { type: 'application/json' });
+		// 		await uploadBytes(storageRef, blob);
+		// 		downloadUrl = await getDownloadURL(storageRef);
+		// 	} catch (err: any) {
+		// 		throw new Error('Error uploading recording: ' + err.message);
+		// 	}
+		// }
 
 		try {
-			const publishedFiles = await Promise.all(files.map(async file => {
-				file.status = 'published';
-				file.parent_id = reportId;
-				await setDoc(doc(firestore, 'uploads', file._id), file);
-				return file;
-			}));
+			// const publishedFiles = await Promise.all(files.map(async file => {
+			// 	file.status = 'published';
+			// 	file.parent_id = reportId;
+			// 	await setDoc(doc(firestore, 'uploads', file._id), file);
+			// 	return file;
+			// }));
 
-			const newData = {
-				_id: reportId,
-				account_id: accountId,
-				email: userEmail,
-				title: 'Issue Report – ' + reportId,
-				desc: submitDesc,
-				console_logs: consoleLogs,
-				network_requests: networkRequests,
-				device_info: window.navigator.userAgent,
-				bug_screenshot: bugVisualType === 'screenshot' ? downloadUrl : '',
-				bug_video: bugVisualType === 'recording' ? downloadUrl : '',
-				support_files: publishedFiles,
-				created_at: Date.now(),
-			} as IssueReport;
+			// const newData = {
+			// 	_id: reportId,
+			// 	account_id: accountId,
+			// 	email: userEmail,
+			// 	title: 'Issue Report – ' + reportId,
+			// 	desc: submitDesc,
+			// 	console_logs: consoleLogs,
+			// 	network_requests: networkRequests,
+			// 	device_info: window.navigator.userAgent,
+			// 	bug_screenshot: bugVisualType === 'screenshot' ? downloadUrl : '',
+			// 	bug_video: bugVisualType === 'recording' ? downloadUrl : '',
+			// 	support_files: publishedFiles,
+			// 	created_at: Date.now(),
+			// } as IssueReport;
 
-			await setDoc(doc(firestore, 'issue_reports', reportId), newData);
-			sendEmail('notifyAdmin', adminEmail, reportId);
-			setFiles([]);
-			setSubmitDesc('');
-			setBugScreenshot('');
-			setIsThankYou(true);
+			// await setDoc(doc(firestore, 'issue_reports', reportId), newData);
+			// // sendEmail('notifyAdmin', adminEmail, reportId);
+			// setFiles([]);
+			// setSubmitDesc('');
+			// setBugScreenshot('');
+			// setIsThankYou(true);
+			window.parent.location = '/admin';
 		} catch (error: any) {
 			throw new Error('Error reporting: ' + error.message);
 		}
@@ -268,6 +269,7 @@ export default function Widget() {
 					width: 736,
 					speedOption: [1, 2, 4],
 					mouseTail: false,
+					UNSAFE_replayCanvas: true,
 				},
 			});
 		}
@@ -279,13 +281,13 @@ export default function Widget() {
 				<div className="p-8 rounded-lg pb-14 min-h-screen font-medium">
 					{!isThankYou && <div className="space-y-2">
 						<div>
-							<h1 className="font-bold text-xl">Report an Issue</h1>
+							<h1 className="font-bold text-xl">Report Bug</h1>
 						</div>
 						<div>
 							<p>Include some visuals to help us better understand the issue:</p>
 						</div>
 						{!isBug && <div className="space-y-2">
-							<div>
+							{/* <div>
 								<button
 									type="button"
 									className="w-full text-left px-4 py-4 flex justify-between border rounded-lg bg-white hover:bg-zinc-100 transition-colors"
@@ -293,7 +295,7 @@ export default function Widget() {
 								>
 									<span className="text-gray-600"><i className="fas fa-desktop"></i> Capture Current Screenshot</span>
 								</button>
-							</div>
+							</div> */}
 							<div>
 								<button
 									type="button"
@@ -306,9 +308,9 @@ export default function Widget() {
 						</div>}
 						{isBug && <div>
 							<div className="mb-4">
-								{bugScreenshot && <div className="w-full">
+								{/* {bugScreenshot && <div className="w-full">
 									<img className="border rounded-lg" src={bugScreenshot} />
-								</div>}
+								</div>} */}
 								{/* rrweb player */}
 								{bugVideo && <div>
 									<div className="w-full h-[656px] mb-4" ref={rrwebPlayerRef}></div>
@@ -327,7 +329,7 @@ export default function Widget() {
 													onChange={e => handleChange('desc', e)}
 													onKeyDown={e => { e.key === 'Enter' && e.preventDefault() }}
 													maxLength={10000}
-													required
+												// required
 												/>
 											</div>
 										</div>
@@ -349,8 +351,8 @@ export default function Widget() {
 												allowMultiple={true}
 												maxFiles={5}
 												server={server}
-												onaddfilestart={() => handleAddFileStart()}
-												onprocessfilerevert={() => setIsSubmitActive(false)}
+												// onaddfilestart={() => handleAddFileStart()}
+												// onprocessfilerevert={() => setIsSubmitActive(false)}
 												onremovefile={() => setIsSubmitActive(true)}
 												labelIdle='Drop your file(s) here or <span class="filepond--label-action">Browse</span>'
 												credits={false}
@@ -367,11 +369,11 @@ export default function Widget() {
 										onChange={e => handleChange('email', e)}
 										onKeyDown={e => { e.key === 'Enter' && e.preventDefault() }}
 										maxLength={320}
-										required
+									// required
 									/>
 								</div>
 								<div className="space-x-2">
-									<input type="checkbox" id="agreeCollectInfo" required />
+									<input type="checkbox" id="agreeCollectInfo" />
 									<label htmlFor="agreeCollectInfo" className="font-medium text-gray-400 text-sm">We collect your device info, console logs, and network requests on this site to help us better understand and fix this issue</label>
 								</div>
 								<div>
@@ -380,7 +382,7 @@ export default function Widget() {
 										className="w-full md:w-auto px-4 py-2 bg-zinc-600 hover:bg-zinc-700 text-white font-bold rounded-lg transition-colors"
 										style={isSubmitActive ? { opacity: 1 } : { opacity: 0.3 }}
 										disabled={isSubmitActive ? false : true}
-									>Report Issue</button>
+									>View Demo Report</button>
 								</div>
 							</form>
 						</div>}
@@ -394,9 +396,9 @@ export default function Widget() {
 						</div>
 					</div>}
 				</div>
-				<div className="fixed bottom-0 text-center bg-zinc-100 w-full py-1 rounded-b-lg">
+				{/* <div className="fixed bottom-0 text-center bg-zinc-100 w-full py-1 rounded-b-lg">
 					<span className="text-sm font-bold text-gray-500 hover:text-gray-500 transition-colors"><a href="https://ssimple.co" target="_blank">Powered by  ssimple</a></span>
-				</div>
+				</div> */}
 			</div>
 	);
 }
